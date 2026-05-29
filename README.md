@@ -53,6 +53,37 @@ For African markets specifically, RWA tokenization offers a pathway to fractiona
 
 ---
 
+## Key Concepts
+
+This protocol is built on three foundational ideas from the RWA tokenization space:
+
+### 1. The Oracle Problem in RWAs
+
+Tokenizing a real-world asset on-chain is easy. **Proving the off-chain asset actually exists, is owned by the protocol, and is correctly priced** is hard. Solving this requires a decentralized oracle network — anything centralized (a single API call, one trusted server) recreates the trust assumptions that blockchain was designed to remove.
+
+### 2. Chainlink Functions
+
+[Chainlink Functions](https://docs.chain.link/chainlink-functions) is a serverless platform that lets smart contracts fetch data from any Web2 API. The request lifecycle:
+
+1. The smart contract calls `sendRequest()` with JavaScript source code
+2. A Decentralized Oracle Network (DON) executes the code off-chain across multiple nodes
+3. Nodes reach consensus on the result
+4. The result is returned on-chain via the `fulfillRequest()` callback
+
+This is how the protocol verifies real-world asset balances at a custodian or broker (e.g., querying an Alpaca brokerage account to confirm the protocol holds *N* shares of TSLA).
+
+### 3. Three Models of RWA Tokenization
+
+| Model              | Backing              | Trust Assumption                    | Examples                  |
+|--------------------|----------------------|-------------------------------------|---------------------------|
+| **On-chain collateralized** | Crypto in vault | Smart contract + liquidation engine | DAI, sUSD                 |
+| **Synthetic**      | None (price-tracking)| Oracle accuracy                     | Synthetix synths          |
+| **Backed**         | Real off-chain assets | Custodian + Proof-of-Reserve       | Tokenized treasuries, USDC|
+
+This project will implement and explore all three.
+
+---
+
 ## Tech Stack
 
 | Layer                | Technology                                                  |
@@ -73,15 +104,20 @@ This project is **actively in development**. Current progress:
 
 - [x] Project scaffolding with Foundry
 - [x] Chainlink Brownie Contracts integration
+- [x] OpenZeppelin contracts integration
+- [x] Architecture & tokenization model defined
+- [x] Chainlink Functions architecture understood (request/response lifecycle, DON consensus)
 - [ ] Core ERC-20 RWA token contract
-- [ ] Chainlink Functions integration for off-chain data fetching
+- [ ] `FunctionsClient` inheritance and request handling
 - [ ] Chainlink Price Feeds integration
+- [ ] On-chain collateral module
 - [ ] Mint request flow
 - [ ] Redeem request flow
-- [ ] Collateral management
 - [ ] Comprehensive test suite
-- [ ] Testnet deployment scripts
+- [ ] Testnet deployment scripts (Sepolia / Fuji)
 - [ ] Frontend interface
+
+**Currently working on:** Tokenization contract design — integrating Chainlink Functions to fetch off-chain brokerage data as the source of truth for minting.
 
 ---
 
@@ -252,7 +288,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ## Author
 
-**Mushuka Mulenga** (DevKay)
+**Mushuka Milenga** (DevKay)
 Computer Science Student — ZCAS University, Lusaka, Zambia
 Exploring the intersection of blockchain, AI, and African capital markets.
 
